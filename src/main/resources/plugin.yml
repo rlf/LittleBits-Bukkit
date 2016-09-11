@@ -1,20 +1,16 @@
 name: ${project.name}
-main: com.github.rlf.mytemplateplugin.MyTemplatePlugin
+main: com.github.rlf.bitcloud.BitCloud
 version: ${project.version}
 description: bitCloud for Bukkit v${project.version}
 author: R4zorax
-
-# Hårde afhængigheder (uden disse skal Bukkit ikke engang forsøge at starte pluginnet)
 depend: []
-# Bløde afhængigheder (uden disse kan vi godt starte op)
 softdepend: []
 commands:
     bitcloud:
-        description: Primær bitCloud kommando
+        description: Primary bitCloud command
         aliases: [bc]
-        # <command> erstattes af den kommando der blev brugt (f.eks. /mc, hvis aliaset blev brugt)
         usage:  |
-             /<command> help - viser hjælpe skærmen
+             /<command> help - shows additional help
 permissions:
   bitcloud.*:
     default: op

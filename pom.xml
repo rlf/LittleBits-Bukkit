@@ -61,5 +61,15 @@
             <version>1.10.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>dk.lockfuglsang.minecraft</groupId>
+            <artifactId>bukkit-utils</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>LATEST</version>
+        </dependency>
     </dependencies>
 </project>
