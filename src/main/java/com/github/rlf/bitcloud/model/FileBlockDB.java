@@ -5,9 +5,9 @@ import com.github.rlf.bitcloud.event.EventManager;
 import dk.lockfuglsang.minecraft.file.FileUtil;
 import dk.lockfuglsang.minecraft.yml.YmlConfiguration;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,11 +17,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
  * Database holding all the registered littlebits blocks.
  */
 public class FileBlockDB implements BlockDB {
+    private static final Logger log = Logger.getLogger(FileBlockDB.class.getName());
 
     private final DeviceDB deviceDB;
     private final EventManager eventManager;
@@ -50,7 +52,7 @@ public class FileBlockDB implements BlockDB {
                 BlockLocation bl = BlockLocation.wrap(key);
                 if (bl != null) {
                     Block block = bl.toLocation().getBlock();
-                    if (block != null && block.getType() == Material.REDSTONE_COMPARATOR) {
+                    if (LittlebitsBlock.isLittlebitsBlockType(block)) {
                         LittlebitsBlock littlebitsBlock = new LittlebitsBlock(block);
                         String deviceId = sec.getString(key, null);
                         if (deviceId != null) {
@@ -72,7 +74,7 @@ public class FileBlockDB implements BlockDB {
             try {
                 config.save(FileUtil.getConfigFile("blocks.yml"));
             } catch (IOException e) {
-                e.printStackTrace();
+                log.info("Unable to save file: " + e);
             }
         }
     }
@@ -85,6 +87,11 @@ public class FileBlockDB implements BlockDB {
             }
             map.get(location).add(littlebitsBlock);
         }
+    }
+
+    @Override
+    public List<LittlebitsBlock> getBlocks() {
+        return Collections.unmodifiableList(new ArrayList<>(blocks.values()));
     }
 
     @Override

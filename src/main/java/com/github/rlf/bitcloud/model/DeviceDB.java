@@ -11,6 +11,8 @@ public interface DeviceDB extends AbstractDB {
 
     Account addAccount(String token);
 
+    boolean removeAccount(String token);
+
     Device getDevice(String id);
 
     /**

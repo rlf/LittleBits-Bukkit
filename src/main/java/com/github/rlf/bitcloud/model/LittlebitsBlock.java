@@ -71,23 +71,33 @@ public class LittlebitsBlock {
         return block.getLocation();
     }
 
+    @Override
+    public String toString() {
+        return "LittlebitsBlock{" +
+                "block=" + block +
+                ", device=" + device +
+                '}';
+    }
+
     public static Location getInputLocation(Block block) {
         BlockState state = block.getState();
-        if (state instanceof Directional) {
-            return block.getRelative(((Directional)state).getFacing().getOppositeFace()).getLocation();
+        if (state != null && state.getData() instanceof Directional) {
+            Directional directional = (Directional) state.getData();
+            return block.getRelative(directional.getFacing().getOppositeFace()).getLocation();
         }
         return null;
     }
 
     public static Location getOutputLocation(Block block) {
         BlockState state = block.getState();
-        if (state instanceof Directional) {
-            return block.getRelative(((Directional)state).getFacing()).getLocation();
+        if (state != null && state.getData() instanceof Directional) {
+            Directional directional = (Directional) state.getData();
+            return block.getRelative(directional.getFacing()).getLocation();
         }
         return null;
     }
 
-    public static boolean isLittlebitsBlock(ItemStack itemInHand) {
+    public static boolean isLittlebitsBlockType(ItemStack itemInHand) {
         return itemInHand != null
                 && itemInHand.getType() == Material.REDSTONE_COMPARATOR
                 && itemInHand.getEnchantments() != null
@@ -96,5 +106,10 @@ public class LittlebitsBlock {
                 && itemInHand.getItemMeta().getLore() != null
                 && itemInHand.getItemMeta().getLore().size() > 0
                 && itemInHand.getItemMeta().getLore().get(0).equalsIgnoreCase(tr("littleBits"));
+    }
+
+    public static boolean isLittlebitsBlockType(Block block) {
+        return block != null
+                && block.getType() == Material.REDSTONE_COMPARATOR_OFF;
     }
 }

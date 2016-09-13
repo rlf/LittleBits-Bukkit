@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * An abstraction of the CloudAPI
  */
-public interface CloadAPI {
+public interface CloudAPI {
     /**
      * Returns the list of devices from the given account.
      * NOTE: Should NEVER be called on the primary server thread.

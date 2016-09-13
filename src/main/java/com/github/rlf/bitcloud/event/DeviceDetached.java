@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 /**
  * An event fired when a Littlebits device is detached from a block.
  */
-public class DeviceDetached extends DeviceEvent {
+public class DeviceDetached extends AbstractDeviceEvent {
     private static final HandlerList handlers = new HandlerList();
     private final LittlebitsBlock block;
 

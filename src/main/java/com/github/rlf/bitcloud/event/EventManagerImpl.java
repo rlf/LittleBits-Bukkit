@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Created by R4zorax on 12/09/2016.
+ * Adaptor between EventManager and JavaPlugin
  */
 public class EventManagerImpl implements EventManager {
     private final JavaPlugin plugin;

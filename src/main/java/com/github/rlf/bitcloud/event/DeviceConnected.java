@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 /**
  * An event fired when one of the registered devices has been connected.
  */
-public class DeviceConnected extends DeviceEvent {
+public class DeviceConnected extends AbstractDeviceEvent {
     private static final HandlerList handlers = new HandlerList();
 
     public DeviceConnected(Device device) {

@@ -16,6 +16,10 @@ public class Account {
         devices = new CopyOnWriteArrayList<>();
     }
 
+    public String getToken() {
+        return token;
+    }
+
     public List<Device> getDevices() {
         return devices;
     }
@@ -39,5 +43,13 @@ public class Account {
     @Override
     public int hashCode() {
         return Objects.hash(token);
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "token='" + token + '\'' +
+                ", devices=" + devices +
+                '}';
     }
 }

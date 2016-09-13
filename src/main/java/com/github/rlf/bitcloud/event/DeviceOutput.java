@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 /**
  * An event fired when one of the registered devices generates an output (from littlebits).
  */
-public class DeviceOutput extends DeviceEvent {
+public class DeviceOutput extends AbstractDeviceEvent {
     private static final HandlerList handlers = new HandlerList();
 
     public DeviceOutput(Device device) {

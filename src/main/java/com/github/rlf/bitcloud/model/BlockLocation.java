@@ -78,6 +78,9 @@ public class BlockLocation {
     }
 
     public static BlockLocation wrap(Location loc) {
+        if (loc == null) {
+            return null;
+        }
         return new BlockLocation(loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 }

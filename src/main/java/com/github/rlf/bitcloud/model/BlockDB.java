@@ -11,6 +11,12 @@ import java.util.Set;
 public interface BlockDB extends AbstractDB {
 
     /**
+     * Returns all littlebits blocks registered
+     * @return all littlebits blocks registered
+     */
+    List<LittlebitsBlock> getBlocks();
+
+    /**
      * Returns the associated littlebits blocks for a given location.
      * @param location The block-location.
      * @return The littlebits block at that location, or <code>null</code>
@@ -43,4 +49,5 @@ public interface BlockDB extends AbstractDB {
      * @param block The block to add.
      */
     void add(LittlebitsBlock block);
+
 }

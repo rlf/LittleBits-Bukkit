@@ -16,6 +16,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Set;
 
@@ -41,7 +43,7 @@ public class BlockEvents implements Listener {
         if (e.isCancelled()
                 || e.getBlock() == null
                 // TODO: 12/09/2016 - R4zorax: what about the other types (ON & OFF)??
-                || e.getBlock().getType() != Material.REDSTONE_COMPARATOR
+                || e.getBlock().getType() != Material.REDSTONE_COMPARATOR_OFF
                 || e.getItemInHand() == null
                 || e.getItemInHand().getType() != Material.REDSTONE_COMPARATOR
                 || e.getItemInHand().getEnchantments().isEmpty()
@@ -49,7 +51,7 @@ public class BlockEvents implements Listener {
         {
             return;
         }
-        if (LittlebitsBlock.isLittlebitsBlock(e.getItemInHand())) {
+        if (LittlebitsBlock.isLittlebitsBlockType(e.getItemInHand())) {
             blockDB.add(new LittlebitsBlock(e.getBlock()));
             e.getPlayer().sendMessage(tr("littlebits block placed, right-click to assign device."));
         }
@@ -59,7 +61,7 @@ public class BlockEvents implements Listener {
     public void on(PlayerInteractEvent e) {
         if (e.isCancelled()
                 || e.getClickedBlock() == null
-                || e.getClickedBlock().getType() != Material.REDSTONE_COMPARATOR
+                || (e.getClickedBlock().getType() != Material.REDSTONE_COMPARATOR_OFF && e.getClickedBlock().getType() != Material.REDSTONE_COMPARATOR_ON)
                 || e.getAction() != Action.RIGHT_CLICK_BLOCK
                 ) {
             return;

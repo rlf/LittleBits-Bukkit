@@ -1,16 +1,16 @@
 package com.github.rlf.bitcloud.event;
 
-import com.github.rlf.bitcloud.model.Device;
+import com.github.rlf.bitcloud.model.Account;
 import org.bukkit.event.HandlerList;
 
 /**
  * An event fired when one of the registered devices receives input (from redstone).
  */
-public class DeviceInput extends AbstractDeviceEvent {
+public class AccountAdded extends AbstractAccountEvent {
     private static final HandlerList handlers = new HandlerList();
 
-    public DeviceInput(Device device) {
-        super(device);
+    public AccountAdded(Account account) {
+        super(account);
     }
 
     @Override
