@@ -67,6 +67,11 @@
             <version>LATEST</version>
         </dependency>
         <dependency>
+            <groupId>dk.lockfuglsang.minecraft</groupId>
+            <artifactId>po-utils</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>LATEST</version>

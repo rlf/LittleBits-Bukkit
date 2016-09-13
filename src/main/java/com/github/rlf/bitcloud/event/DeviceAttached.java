@@ -1,16 +1,23 @@
 package com.github.rlf.bitcloud.event;
 
 import com.github.rlf.bitcloud.model.Device;
+import com.github.rlf.bitcloud.model.LittlebitsBlock;
 import org.bukkit.event.HandlerList;
 
 /**
- * An event fired when one of the registered devices receives input (from redstone).
+ * An event fired when a Littlebits device is attached to a block.
  */
-public class DeviceInput extends DeviceEvent {
+public class DeviceAttached extends DeviceEvent {
     private static final HandlerList handlers = new HandlerList();
+    private final LittlebitsBlock block;
 
-    public DeviceInput(Device device) {
+    public DeviceAttached(Device device, LittlebitsBlock block) {
         super(device);
+        this.block = block;
+    }
+
+    public LittlebitsBlock getBlock() {
+        return block;
     }
 
     @Override

@@ -8,18 +8,9 @@ import org.bukkit.event.HandlerList;
  */
 public class DeviceOutput extends DeviceEvent {
     private static final HandlerList handlers = new HandlerList();
-    private final double amplitude;
 
-    public DeviceOutput(Device device, double amplitude) {
+    public DeviceOutput(Device device) {
         super(device);
-        this.amplitude = amplitude;
-    }
-
-    /**
-     * From 0 to 1.0 both inclusive.
-     */
-    public double getAmplitude() {
-        return amplitude;
     }
 
     @Override
