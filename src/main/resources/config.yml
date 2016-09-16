@@ -1,3 +1,23 @@
 #
-# Primary config-file for the bitCloud-Bukkit plugin
+# Primary config-file for the littlebits-Bukkit plugin
 #
+cloudAPI:
+  baseUrl: 'https://api-http.littlebitscloud.cc'
+  status-code-delay:
+    # Wait 5s before re-posting output to littlebits device
+    # Note: only used when the output in minecraft doesn't change
+    '200': 5000
+
+    # Wait 30s before re-trying disconnected devices
+    '404': 30000
+
+    # Wait 2m before re-trying devices not owned by account
+    '405': 120000
+
+    # Wait 2s when service responds with 'too many requests'
+    '429': 2000
+
+    'default': 250
+
+# Do not change this!
+version: 1

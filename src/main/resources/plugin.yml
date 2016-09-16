@@ -1,17 +1,154 @@
 name: ${project.name}
-main: com.github.rlf.bitcloud.BitCloud
+main: com.github.rlf.littlebits.LittleBitsBukkit
 version: ${project.version}
-description: bitCloud for Bukkit v${project.version}
+description: LittleBits for Bukkit v${project.version}
 author: R4zorax
-depend: []
-softdepend: []
 commands:
-    bitcloud:
-        description: Primary bitCloud command
-        aliases: [bc]
-        usage:  |
-             /<command> help - shows additional help
+  littlebits:
+    description: 'primary littlebits command'
+    aliases: [bits]
+    permission: littlebits.use
 permissions:
-  bitcloud.*:
-    default: op
-    description: Giver spilleren adgang til /mc god kommandoen
+  #
+  # Permission Groups
+  # =================
+  littlebits.*:
+    children:
+      littlebits.account: true
+      littlebits.account.add: true
+      littlebits.account.label: true
+      littlebits.account.list: true
+      littlebits.account.remove: true
+      littlebits.account.token: true
+      littlebits.account.update: true
+      littlebits.block: true
+      littlebits.block.assign: true
+      littlebits.block.break: true
+      littlebits.block.give: true
+      littlebits.block.info: true
+      littlebits.block.list: true
+      littlebits.block.place: true
+      littlebits.device: true
+      littlebits.device.info: true
+      littlebits.device.input: true
+      littlebits.device.output: true
+      littlebits.device.remove: true
+      littlebits.device.update: true
+      littlebits.doc: true
+      littlebits.load: true
+      littlebits.reload: true
+      littlebits.save: true
+      littlebits.use: true
+
+  littlebits.account.*:
+    children:
+      littlebits.account.add: true
+      littlebits.account.label: true
+      littlebits.account.list: true
+      littlebits.account.remove: true
+      littlebits.account.token: true
+      littlebits.account.update: true
+
+  littlebits.block.*:
+    children:
+      littlebits.block.assign: true
+      littlebits.block.break: true
+      littlebits.block.give: true
+      littlebits.block.info: true
+      littlebits.block.list: true
+      littlebits.block.place: true
+
+  littlebits.device.*:
+    children:
+      littlebits.device.info: true
+      littlebits.device.input: true
+      littlebits.device.output: true
+      littlebits.device.remove: true
+      littlebits.device.update: true
+
+  #
+  # Permission Descriptions
+  # =======================
+  littlebits.account:
+    description: 'Grants access to /littlebits account - handle littlebit accounts'
+
+  littlebits.account.add:
+    description: 'Grants access to /littlebits account add <account> - add an account'
+
+  littlebits.account.label:
+    description: 'Grants access to /littlebits account label <account> <label> - give an account a label'
+
+  littlebits.account.list:
+    description: 'Grants access to /littlebits account list - list all current accounts'
+
+  littlebits.account.remove:
+    description: 'Grants access to /littlebits account remove <account> - remove an account'
+
+  littlebits.account.token:
+    description: 'Grants access to /littlebits account token <account> - Shows the account-token'
+
+  littlebits.account.update:
+    description: 'Grants access to /littlebits account update <account> - updates the account info'
+
+  littlebits.block:
+    description: 'Grants access to /littlebits block - manages blocks'
+
+  littlebits.block.assign:
+    description: 'Grants access to /littlebits block assign <block> <device> - assigns a device to a block'
+
+  littlebits.block.break:
+    description: 'allow breaking of littleBits'
+
+  littlebits.block.give:
+    description: 'Grants access to /littlebits block give [player] - gives the player a littlebits block'
+
+  littlebits.block.info:
+    description: 'allow left-clicking littleBits'
+
+  littlebits.block.list:
+    description: 'Grants access to /littlebits block list - lists all littlebit blocks'
+
+  littlebits.block.place:
+    description: 'allow placement of littleBits'
+
+  littlebits.device:
+    description: 'Grants access to /littlebits device - manage devices'
+
+  littlebits.device.info:
+    description: 'Grants access to /littlebits device info <device> - show device info'
+
+  littlebits.device.input:
+    description: 'Grants access to /littlebits device input <device> <pct> - simulate input from device'
+
+  littlebits.device.output:
+    description: 'Grants access to /littlebits device output <device> <0-15> - set output of device'
+
+  littlebits.device.remove:
+    description: 'Grants access to /littlebits device remove <device> - remove device'
+
+  littlebits.device.update:
+    description: 'Grants access to /littlebits device update <device> - update device'
+
+  littlebits.doc:
+    description: 'Grants access to /littlebits doc [format] [arg] - saves documentation of the commands to a file'
+
+  littlebits.load:
+    description: 'Grants access to /littlebits load - loads the databases'
+
+  littlebits.reload:
+    description: 'Grants access to /littlebits reload - saves and reloads the plugin configuration'
+
+  littlebits.save:
+    description: 'Grants access to /littlebits save - saves the configs to file'
+
+  littlebits.use:
+    default: true
+    description: 'Grants access to /littlebits - primary littlebits command'
+    children:
+      littlebits.account: true
+      littlebits.account.list: true
+      littlebits.block: true
+      littlebits.block.info: true
+      littlebits.block.list: true
+      littlebits.device: true
+      littlebits.device.info: true
