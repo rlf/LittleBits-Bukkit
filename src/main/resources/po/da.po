@@ -1,0 +1,260 @@
+# Danish translations for PACKAGE package
+# Danske oversættelser for pakke PACKAGE.
+# Copyright (C) 2016 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# <EMAIL@ADDRESS>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: LittleBits-Bukkit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-17 13:56+0200\n"
+"PO-Revision-Date: 2016-09-17 20:44+0200\n"
+"Last-Translator: R4zorax\n"
+"Language-Team: Danish <cudim@lockfuglsang.dk>\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.9\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+msgid "littlebits block placed, right-click to assign device."
+msgstr "littleBits blok placeret, højre-klik for at tildele en enhed."
+
+msgid "You are not allowed to place littleBits (littlebits.block.place)"
+msgstr ""
+"Du har ikke tilladelse til at placere littleBits (littlebits.block.place)"
+
+msgid "You are not allowed to break littleBits (littlebits.block.break)"
+msgstr ""
+"Du har ikke tilladelse til at ødelægge littleBits (littlebits.block.break)"
+
+msgid "-none-"
+msgstr "-ingen-"
+
+#, java-format
+msgid "Device {0}"
+msgstr "Enhed {0}"
+
+msgid "You are not allowed to see littleBits info (littlebits.block.info)"
+msgstr ""
+"Du har ikke tilladelse til at se littleBits informationer (littlebits.block."
+"info)"
+
+#, java-format
+msgid "Changed to device {0}"
+msgstr "Ændrede til enhed {0}"
+
+msgid "Disabled this littlebits block."
+msgstr "Deaktiverede denne littleBits blok."
+
+msgid "You are not allowed to change littleBits (littlebits.block.assign)"
+msgstr ""
+"Du har ikke tilladelse til at ændre littleBits (littlebits.block.assign)"
+
+msgid "handle littlebit accounts"
+msgstr "håndter littlebit konti"
+
+msgid "add an account"
+msgstr "tilføj en konto"
+
+#, java-format
+msgid "Added account with token {0}"
+msgstr "Tilføjede en konto med token {0}"
+
+msgid "remove an account"
+msgstr "fjern en konto"
+
+#, java-format
+msgid "Removed account {0}"
+msgstr "Fjernede konto {0}"
+
+#, java-format
+msgid "No account with id {0} was found"
+msgstr "Kunne ikke finde en konto med id {0}"
+
+msgid "list all current accounts"
+msgstr "se alle nuværende konti"
+
+msgid "All accounts:"
+msgstr "Konti:"
+
+#, java-format
+msgid "  Account: {0}\n"
+msgstr "  Konto: {0}\n"
+
+#, java-format
+msgid "    - {0}\n"
+msgstr "    - {0}\n"
+
+msgid "updates the account info"
+msgstr "opdaterer konto information"
+
+#, java-format
+msgid "No account named {0} found"
+msgstr "Kunne ikke finde en konto med id {0}"
+
+#, java-format
+msgid "Updated account {0}"
+msgstr "Opdaterede konto {0}"
+
+msgid "give an account a label"
+msgstr "tilden et navn til en konto"
+
+#, java-format
+msgid "Changed label on {0} to {1}"
+msgstr "Skiftede navn på {0} til {1}"
+
+msgid "Shows the account-token"
+msgstr "Viser kontoens token"
+
+#, java-format
+msgid "Account {0} has token {1}"
+msgstr "Konto {0} har token {1}"
+
+msgid "manages blocks"
+msgstr "håndter blokke"
+
+msgid "lists all littlebit blocks"
+msgstr "lister alle registrerede littleBits blokke"
+
+msgid "Blocks:\n"
+msgstr "Blokke:\n"
+
+#, java-format
+msgid " - {0}\n"
+msgstr " - {0}\n"
+
+msgid "assigns a device to a block"
+msgstr "tildeler en enhed til en blok"
+
+#, java-format
+msgid "{0} is not a valid block-location"
+msgstr "{0} er ikke en valid blok-placering"
+
+#, java-format
+msgid "No device {0} was found"
+msgstr "Ingen enhed med navn {0} fundet"
+
+msgid "No littleBits block found at that location"
+msgstr "Ingen littleBits blok fundet på den position"
+
+msgid "gives the player a littlebits block"
+msgstr "giver spilleren en littleBits blok"
+
+#, java-format
+msgid "Gave {0} a littleBits block"
+msgstr "Gav {0} en littleBits blok"
+
+#, java-format
+msgid "You where given a littleBits block by {0}"
+msgstr "Du modtog en littleBits blok fra {0}"
+
+msgid "No valid player found"
+msgstr "Ingen valid spiller fundet"
+
+msgid "allow placement of littleBits"
+msgstr "tillad placering af littleBits"
+
+msgid "allow breaking of littleBits"
+msgstr "tillad ødelæggelse af littleBits"
+
+msgid "allow left-clicking littleBits"
+msgstr "tillad venstre-klik af littleBits"
+
+msgid "manage devices"
+msgstr "håndter enheder"
+
+msgid "show device info"
+msgstr "viser enhedsinformation"
+
+msgid "remove device"
+msgstr "fjern enhed"
+
+#, java-format
+msgid "Device {0} removed"
+msgstr "Enhed {0} fjernet"
+
+msgid "update device"
+msgstr "opdater enhed"
+
+#, java-format
+msgid "Device {0} updated"
+msgstr "Enhed {0} opdateret"
+
+msgid "set output of device"
+msgstr "sæt output af enhed"
+
+#, java-format
+msgid "Device {0} output set to {1}"
+msgstr "Enhed {0}s output sat til {1}"
+
+msgid "Device output must be between 0-15"
+msgstr "Enheds output skal være imellem 0-15"
+
+msgid "simulate input from device"
+msgstr "simuler input fra en enhed"
+
+#, java-format
+msgid "Device {0} input set to {1}"
+msgstr "Enhed {0} input sat til {1}"
+
+msgid "Device input must be between 0-100"
+msgstr "Enheds input skal være imellem 0-100"
+
+msgid "changes the language of the plugin, and reloads"
+msgstr "skift pluginnets sprog og genindlæs"
+
+#, java-format
+msgid "§aSuccessfully changed language to §e{0}"
+msgstr "§aSkiftede sprog til §e{0}"
+
+#, java-format
+msgid "§cFailed to change language to §e{0}"
+msgstr "§cKunne ikke skifte sprog til §e{0}"
+
+msgid "§9Supported Languages:\n"
+msgstr "§9Understøttede sprog:\n"
+
+#, java-format
+msgid "§f{0} §7{1} §9 by {2} §7{3}\n"
+msgstr "§f{0} §7{1} §9 af {2} §7{3}\n"
+
+msgid "§cUnable to locate any languages."
+msgstr "§cKunne ikke finde nogen sprog."
+
+msgid "primary littlebits command"
+msgstr "primær littleBits kommando"
+
+msgid "loads the databases"
+msgstr "Genindlæser databaserne"
+
+msgid "Databases loaded"
+msgstr "Databaserne indlæst"
+
+msgid "saves and reloads the plugin configuration"
+msgstr "gemmer og genindlæser pluginkonfigurationen"
+
+msgid "Plugin has been reloaded!"
+msgstr "Pluginnet er blevet genindlæst!"
+
+msgid "saves the configs to file"
+msgstr "gemmer konfigurationen til fil"
+
+msgid "Configuration saved"
+msgstr "Konfigurationen gemt"
+
+msgid "connected"
+msgstr "§aforbundet"
+
+msgid "disconnected"
+msgstr "§cafbrudt"
+
+#, java-format
+msgid "{0} ({1}:{2}, in={3}, out={4}, {5})"
+msgstr "{0} §7({1}:{2}, in={3}, out={4}, {5}§7)"
+
+msgid "littleBits"
+msgstr "littleBits"

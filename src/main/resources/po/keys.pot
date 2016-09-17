@@ -1,0 +1,251 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "littlebits block placed, right-click to assign device."
+msgstr ""
+
+msgid "You are not allowed to place littleBits (littlebits.block.place)"
+msgstr ""
+
+msgid "You are not allowed to break littleBits (littlebits.block.break)"
+msgstr ""
+
+msgid "-none-"
+msgstr ""
+
+#, java-format
+msgid "Device {0}"
+msgstr ""
+
+msgid "You are not allowed to see littleBits info (littlebits.block.info)"
+msgstr ""
+
+#, java-format
+msgid "Changed to device {0}"
+msgstr ""
+
+msgid "Disabled this littlebits block."
+msgstr ""
+
+msgid "You are not allowed to change littleBits (littlebits.block.assign)"
+msgstr ""
+
+msgid "handle littlebit accounts"
+msgstr ""
+
+msgid "add an account"
+msgstr ""
+
+#, java-format
+msgid "Added account with token {0}"
+msgstr ""
+
+msgid "remove an account"
+msgstr ""
+
+#, java-format
+msgid "Removed account {0}"
+msgstr ""
+
+#, java-format
+msgid "No account with id {0} was found"
+msgstr ""
+
+msgid "list all current accounts"
+msgstr ""
+
+msgid "All accounts:"
+msgstr ""
+
+#, java-format
+msgid "  Account: {0}\n"
+msgstr ""
+
+#, java-format
+msgid "    - {0}\n"
+msgstr ""
+
+msgid "updates the account info"
+msgstr ""
+
+#, java-format
+msgid "No account named {0} found"
+msgstr ""
+
+#, java-format
+msgid "Updated account {0}"
+msgstr ""
+
+msgid "give an account a label"
+msgstr ""
+
+#, java-format
+msgid "Changed label on {0} to {1}"
+msgstr ""
+
+msgid "Shows the account-token"
+msgstr ""
+
+#, java-format
+msgid "Account {0} has token {1}"
+msgstr ""
+
+msgid "manages blocks"
+msgstr ""
+
+msgid "lists all littlebit blocks"
+msgstr ""
+
+msgid "Blocks:\n"
+msgstr ""
+
+#, java-format
+msgid " - {0}\n"
+msgstr ""
+
+msgid "assigns a device to a block"
+msgstr ""
+
+#, java-format
+msgid "{0} is not a valid block-location"
+msgstr ""
+
+#, java-format
+msgid "No device {0} was found"
+msgstr ""
+
+msgid "No littleBits block found at that location"
+msgstr ""
+
+msgid "gives the player a littlebits block"
+msgstr ""
+
+#, java-format
+msgid "Gave {0} a littleBits block"
+msgstr ""
+
+#, java-format
+msgid "You where given a littleBits block by {0}"
+msgstr ""
+
+msgid "No valid player found"
+msgstr ""
+
+msgid "allow placement of littleBits"
+msgstr ""
+
+msgid "allow breaking of littleBits"
+msgstr ""
+
+msgid "allow left-clicking littleBits"
+msgstr ""
+
+msgid "manage devices"
+msgstr ""
+
+msgid "show device info"
+msgstr ""
+
+msgid "remove device"
+msgstr ""
+
+#, java-format
+msgid "Device {0} removed"
+msgstr ""
+
+msgid "update device"
+msgstr ""
+
+#, java-format
+msgid "Device {0} updated"
+msgstr ""
+
+msgid "set output of device"
+msgstr ""
+
+#, java-format
+msgid "Device {0} output set to {1}"
+msgstr ""
+
+msgid "Device output must be between 0-15"
+msgstr ""
+
+msgid "simulate input from device"
+msgstr ""
+
+#, java-format
+msgid "Device {0} input set to {1}"
+msgstr ""
+
+msgid "Device input must be between 0-100"
+msgstr ""
+
+msgid "changes the language of the plugin, and reloads"
+msgstr ""
+
+#, java-format
+msgid "§aSuccessfully changed language to §e{0}"
+msgstr ""
+
+#, java-format
+msgid "§cFailed to change language to §e{0}"
+msgstr ""
+
+msgid "§9Supported Languages:\n"
+msgstr ""
+
+#, java-format
+msgid "§f{0} §7{1} §9 by {2} §7{3}\n"
+msgstr ""
+
+msgid "§cUnable to locate any languages."
+msgstr ""
+
+msgid "primary littlebits command"
+msgstr ""
+
+msgid "loads the databases"
+msgstr ""
+
+msgid "Databases loaded"
+msgstr ""
+
+msgid "saves and reloads the plugin configuration"
+msgstr ""
+
+msgid "Plugin has been reloaded!"
+msgstr ""
+
+msgid "saves the configs to file"
+msgstr ""
+
+msgid "Configuration saved"
+msgstr ""
+
+msgid "connected"
+msgstr ""
+
+msgid "disconnected"
+msgstr ""
+
+#, java-format
+msgid "{0} ({1}:{2}, in={3}, out={4}, {5})"
+msgstr ""
+
+msgid "littleBits"
+msgstr ""

@@ -3,11 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.rlf</groupId>
     <artifactId>LittleBits-Bukkit</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <name>LittleBits-Bukkit</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <msgmerge>msgmerge</msgmerge>
+        <msgfmt>msgfmt</msgfmt>
     </properties>
 
     <scm>
@@ -30,6 +32,11 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.3</version>
                 <executions>
@@ -41,28 +48,18 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
-                            <shadeSourcesContent>true</shadeSourcesContent>
                             <minimizeJar>true</minimizeJar>
                             <artifactSet>
                                 <includes>
                                     <include>dk.lockfuglsang.minecraft:po-utils</include>
                                     <include>dk.lockfuglsang.minecraft:bukkit-utils</include>
+                                    <include>org.apache.httpcomponents:httpclient</include>
+                                    <include>org.apache.httpcomponents:httpcore</include>
                                 </includes>
                             </artifactSet>
-                            <relocations>
-                                <relocation>
-                                    <pattern>dk.lockfuglsang.minecraft</pattern>
-                                    <shadedPattern>com.github.rlf.littlebits.utils</shadedPattern>
-                                </relocation>
-                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
             </plugin>
         </plugins>
         <resources>
@@ -72,6 +69,8 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>*.yml</include>
+                    <include>po/*.po</include>
+                    <include>po/*.pot</include>
                 </includes>
             </resource>
             <resource>
@@ -83,6 +82,13 @@
                     <include>LICENSE</include>
                 </includes>
             </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${project.build}/classes</directory>
+                <includes>
+                    <include>gettext-report.txt</include>
+                </includes>
+            </resource>
         </resources>
     </build>
     <repositories>
@@ -91,6 +97,142 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>rlf-mvn-repo</id>
+            <url>https://raw.github.com/rlf/mvn-repo/master</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <profiles>
+        <profile>
+            <id>i18n</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.rlf</groupId>
+                        <artifactId>gettext-maven-plugin</artifactId>
+                        <version>1.2.9</version>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>gettext</goal>
+                                </goals>
+                                <configuration>
+                                    <extraArgs>
+                                        <arg>--no-location</arg>
+                                    </extraArgs>
+                                    <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>update-po-files</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>merge</goal>
+                                </goals>
+                                <configuration>
+                                    <msgmergeCmd>${msgmerge}</msgmergeCmd>
+                                    <extraArgs>
+                                        <arg>-N</arg>
+                                    </extraArgs>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>clear-fuzzy</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>attrib</goal>
+                                </goals>
+                                <configuration>
+                                    <extraArgs>
+                                        <arg>--clear-fuzzy</arg>
+                                        <arg>--empty</arg>
+                                        <arg>--no-obsolete</arg>
+                                    </extraArgs>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>report-po-completion</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <msgfmtCmd>${msgfmt}</msgfmtCmd>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <javaVersion>2</javaVersion>
+                            <poDirectory>${project.basedir}/src/main/resources/po</poDirectory>
+                            <targetBundle>notused</targetBundle>
+                            <outputFormat>properties</outputFormat>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>replacer</artifactId>
+                        <version>1.5.3</version>
+                        <executions>
+                            <execution>
+                                <id>cleanup-po-files</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <basedir>${basedir}/src/main/resources/po</basedir>
+                                    <filesToInclude>*.pot</filesToInclude>
+                                    <replacements>
+                                        <replacement>
+                                            <token>"POT-Creation-Date:.*\n</token>
+                                            <value/>
+                                        </replacement>
+                                    </replacements>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>shade</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-shade-plugin</artifactId>
+                            <version>2.3</version>
+                            <configuration>
+                                <relocations>
+                                    <relocation>
+                                        <pattern>dk.lockfuglsang.minecraft</pattern>
+                                        <shadedPattern>com.github.rlf.littlebits.utils</shadedPattern>
+                                    </relocation>
+                                    <relocation>
+                                        <pattern>org.apache.http</pattern>
+                                        <shadedPattern>com.github.rlf.littlebits.http</shadedPattern>
+                                    </relocation>
+                                </relocations>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
     <dependencies>
         <!-- See https://www.spigotmc.org/wiki/spigot-maven/ -->
         <!--Bukkit API-->
@@ -113,7 +255,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>LATEST</version>
+            <version>4.5</version>
         </dependency>
     </dependencies>
 </project>

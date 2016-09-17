@@ -27,6 +27,7 @@ import java.util.logging.Logger;
  */
 public class BukkitCloudAPI implements Listener {
     private static final Logger LOG = Logger.getLogger(BukkitCloudAPI.class.getName());
+    private static final int WAIT_NOT_OWNED = 600000; // We do not own the device, wait for 10minuts
     private static final int WAIT_DISCONNECTED = 30000; // Wait 30 seconds before re-checking
     private static final int WAIT_RATE_LIMIT = 500; // Try again in half a second
     private static final int WAIT_NORMAL = 250; // Most devices say 200 ms
@@ -44,6 +45,7 @@ public class BukkitCloudAPI implements Listener {
         this.cloudAPI = cloudAPI;
         this.deviceDB = deviceDB;
         statusCodeWait.put(200, WAIT_OK);
+        statusCodeWait.put(403, WAIT_NOT_OWNED);
         statusCodeWait.put(404, WAIT_DISCONNECTED);
         statusCodeWait.put(429, WAIT_RATE_LIMIT);
         ConfigurationSection section = config.getConfigurationSection("cloudAPI.status-code-delay");
@@ -118,9 +120,9 @@ public class BukkitCloudAPI implements Listener {
             @Override
             public void run() {
                 int statusCode;
-                do {
-                   statusCode = cloudAPI.writeLabel(e.getDevice(), e.getDevice().getLabel());
-                } while (statusCode != 200 && waitStatusCode(statusCode));
+                if ((statusCode = cloudAPI.writeLabel(e.getDevice(), e.getDevice().getLabel())) != 200) {
+                    scheduler.async(this, getWaitTime(statusCode));
+                }
             }
         });
     }
@@ -129,6 +131,10 @@ public class BukkitCloudAPI implements Listener {
         DeviceReader monitor = deviceReader.remove(device);
         if (monitor != null) {
             monitor.cancel();
+        }
+        DeviceWriter writer = deviceWriter.remove(device);
+        if (writer != null) {
+            writer.cancel();
         }
     }
 
@@ -160,6 +166,7 @@ public class BukkitCloudAPI implements Listener {
         private final Device device;
         private final Scheduler.Task task;
         private volatile boolean cancelled = false;
+
         public DeviceReader(Device device) {
             this.device = device;
             task = scheduler.async(this);
@@ -171,17 +178,17 @@ public class BukkitCloudAPI implements Listener {
 
         @Override
         public void run() {
-            while (!isCancelled()) {
-                int status = 500;
-                try {
-                    status = cloudAPI.readInput(device, this);
-                    if (isCancelled()) {
-                        return;
-                    }
-                } catch (Exception e) {
-                    deviceDB.removeDevice(device);
+            int status = 500;
+            try {
+                status = cloudAPI.readInput(device, this);
+                if (isCancelled()) {
+                    return;
                 }
-                waitStatusCode(status);
+            } catch (Exception e) {
+                deviceDB.removeDevice(device);
+            }
+            if (!isCancelled()) {
+                scheduler.async(this, getWaitTime(status));
             }
         }
 
@@ -197,22 +204,13 @@ public class BukkitCloudAPI implements Listener {
 
     }
 
-    private boolean waitStatusCode(int status) {
-        try {
-            Thread.sleep(getWaitTime(status));
-            return true;
-        } catch (InterruptedException e) {
-            // Ignored
-            return false;
-        }
-    }
-
     /**
      * Responsible for throttling output reg. a device to the CloudAPI.
      */
     private class DeviceWriter implements Runnable {
         private final Device device;
         private Scheduler.Task pendingTask;
+        private boolean cancelled = false;
 
         public DeviceWriter(Device device) {
             this.device = device;
@@ -220,7 +218,7 @@ public class BukkitCloudAPI implements Listener {
 
         @Override
         public void run() {
-            int status = cloudAPI.writeOutput(device, device.getOut()*100/15);
+            int status = cloudAPI.writeOutput(device, device.getOut() * 100 / 15);
             queue(getWaitTime(status));
         }
 
@@ -229,7 +227,12 @@ public class BukkitCloudAPI implements Listener {
         }
 
         public void queue(int delay) {
-            cancel();
+            if (pendingTask != null) {
+                pendingTask.cancel();
+            }
+            if (isCancelled()) {
+                return; // Don't queue a new one
+            }
             try {
                 pendingTask = scheduler.async(this, delay);
             } catch (IllegalPluginAccessException e) {
@@ -237,7 +240,12 @@ public class BukkitCloudAPI implements Listener {
             }
         }
 
+        private boolean isCancelled() {
+            return Thread.currentThread().isInterrupted() || cancelled;
+        }
+
         public void cancel() {
+            cancelled = true;
             if (pendingTask != null) {
                 pendingTask.cancel();
             }

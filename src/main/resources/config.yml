@@ -3,6 +3,10 @@
 #
 cloudAPI:
   baseUrl: 'https://api-http.littlebitscloud.cc'
+
+  # Set this to false ONLY if SSL handshakes are not working
+  secure: true
+
   status-code-delay:
     # Wait 5s before re-posting output to littlebits device
     # Note: only used when the output in minecraft doesn't change

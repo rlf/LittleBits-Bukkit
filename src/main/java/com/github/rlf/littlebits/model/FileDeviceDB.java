@@ -34,6 +34,7 @@ public class FileDeviceDB implements DeviceDB {
 
     public FileDeviceDB(EventManager eventManager) {
         this.eventManager = eventManager;
+        config = FileUtil.getYmlConfiguration("devices.yml");
     }
 
     @Override
@@ -219,7 +220,7 @@ public class FileDeviceDB implements DeviceDB {
             removeAccount(account);
         }
         accounts.clear();
-        config = FileUtil.getYmlConfiguration("devices.yml");
+        config = FileUtil.loadConfig(FileUtil.getConfigFile("devices.yml"));
         ConfigurationSection sec = config.getConfigurationSection("accounts");
         if (sec != null) {
             for (String token : sec.getKeys(false)) {

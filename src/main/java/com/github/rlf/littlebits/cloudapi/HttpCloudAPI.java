@@ -4,10 +4,12 @@ import com.github.rlf.littlebits.async.Consumer;
 import com.github.rlf.littlebits.model.Account;
 import com.github.rlf.littlebits.model.Device;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -17,12 +19,20 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.net.ssl.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -31,13 +41,15 @@ import java.util.logging.Logger;
 public class HttpCloudAPI implements CloudAPI {
     private static final Logger LOG = Logger.getLogger(HttpCloudAPI.class.getName());
     private final String baseUrl;
+    private final boolean secureSSL;
 
     public HttpCloudAPI() {
-        this(null);
+        this(null, true);
     }
 
-    public HttpCloudAPI(String baseUrl) {
+    public HttpCloudAPI(String baseUrl, boolean secureSSL) {
         this.baseUrl = baseUrl != null ? baseUrl : "https://api-http.littlebitscloud.cc";
+        this.secureSSL = secureSSL;
     }
 
     @Override
@@ -46,7 +58,7 @@ public class HttpCloudAPI implements CloudAPI {
         httpGet.setHeader("Authorization", "Bearer " + account.getToken());
         httpGet.setHeader("Accept", "application/vnd.littlebits.v2+json");
         try (
-                CloseableHttpClient httpClient = HttpClients.createDefault();
+                CloseableHttpClient httpClient = createHttpClient();
                 CloseableHttpResponse response = httpClient.execute(httpGet)
         ) {
             if (response.getStatusLine().getStatusCode() == 200) {
@@ -71,6 +83,9 @@ public class HttpCloudAPI implements CloudAPI {
             } else {
                 throw new APIException(null, APIException.Reason.CONNECTION_ERROR);
             }
+        } catch (SSLHandshakeException e) {
+            LOG.log(Level.INFO, "What the HECK? Why can't I use https??", e);
+            throw new APIException(e);
         } catch (IOException e) {
             throw new APIException(e);
         }
@@ -82,7 +97,7 @@ public class HttpCloudAPI implements CloudAPI {
         httpGet.setHeader("Authorization", "Bearer " + device.getAccount().getToken());
         httpGet.setHeader("Content-Type", "application/json");
         httpGet.setHeader("Accept", "application/vnd.littlebits.v2+json");
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+        try (CloseableHttpClient httpClient = createHttpClient();
              CloseableHttpResponse response = httpClient.execute(httpGet)
         ) {
             if (response.getStatusLine().getStatusCode() == 200) {
@@ -90,6 +105,26 @@ public class HttpCloudAPI implements CloudAPI {
             }
             return response.getStatusLine().getStatusCode();
         } catch (Exception e) {
+            throw new APIException(e);
+        }
+    }
+
+    private CloseableHttpClient createHttpClient() {
+        if (secureSSL) {
+            return HttpClients.createDefault();
+        }
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sc);
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            return HttpClients
+                    .custom()
+                    .setSSLContext(sc)
+                    .setSSLSocketFactory(sslsf)
+                    .setSSLHostnameVerifier(hostName)
+                    .build();
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new APIException(e);
         }
     }
@@ -138,7 +173,7 @@ public class HttpCloudAPI implements CloudAPI {
         httpPost.setHeader("Content-Type", "application/json");
         httpPost.setHeader("Accept", "application/vnd.littlebits.v2+json");
         httpPost.setEntity(new StringEntity("{\"percent\":" + amplitude + ",\"duration_ms\":-1}\n", ContentType.APPLICATION_JSON));
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+        try (CloseableHttpClient httpClient = createHttpClient();
              CloseableHttpResponse response = httpClient.execute(httpPost)
         ) {
             return response.getStatusLine().getStatusCode();
@@ -155,7 +190,7 @@ public class HttpCloudAPI implements CloudAPI {
         httpMethod.setHeader("Content-Type", "application/json");
         httpMethod.setHeader("Accept", "application/vnd.littlebits.v2+json");
         httpMethod.setEntity(new StringEntity("{\"label\":\"" + label + "\"}\n", ContentType.APPLICATION_JSON));
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+        try (CloseableHttpClient httpClient = createHttpClient();
              CloseableHttpResponse response = httpClient.execute(httpMethod)
         ) {
             return response.getStatusLine().getStatusCode();
@@ -169,4 +204,24 @@ public class HttpCloudAPI implements CloudAPI {
         // Do nothing (for now)
     }
 
+    private static final HostnameVerifier hostName = new HostnameVerifier() {
+        @Override
+        public boolean verify(String s, SSLSession sslSession) {
+            return true;
+        }
+    };
+
+    private static final  TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+    };
 }

@@ -40,6 +40,7 @@ public class LittleBitsCommand extends AbstractCommandExecutor {
                 return true;
             }
         });
+        add(new LanguageCommand(plugin));
 
         final List<String> zero_15 = new ArrayList<>();
         for (int i = 0; i <= 15; i++) {

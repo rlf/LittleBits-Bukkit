@@ -15,6 +15,7 @@ import com.github.rlf.littlebits.event.EventManager;
 import com.github.rlf.littlebits.event.EventManagerImpl;
 import com.github.rlf.littlebits.model.*;
 import dk.lockfuglsang.minecraft.file.FileUtil;
+import dk.lockfuglsang.minecraft.po.I18nUtil;
 import dk.lockfuglsang.minecraft.yml.YmlConfiguration;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,6 +24,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Iterator;
+import java.util.Locale;
 
 /**
  * Main Bukkit plugin class for the littlebitsBukkit plugin.
@@ -37,12 +39,17 @@ public class LittleBitsBukkit extends JavaPlugin {
     @Override
     public void onEnable() {
         FileUtil.setDataFolder(getDataFolder());
+        I18nUtil.setDataFolder(getDataFolder());
+        YmlConfiguration config = getConfig();
+        I18nUtil.setLocale(Locale.forLanguageTag(config.getString("language", "en")));
+
         Scheduler scheduler = new SchedulerBukkit(this, getServer().getScheduler());
         EventManager eventManager = new EventManagerImpl(this, scheduler);
         deviceDB = new FileDeviceDB(eventManager);
 
-        YmlConfiguration config = getConfig();
-        cloudAPI = new HttpCloudAPI(config.getString("cloudAPI.baseUrl", null));
+        cloudAPI = new HttpCloudAPI(
+                config.getString("cloudAPI.baseUrl", null),
+                config.getBoolean("cloudAPI.secure", true));
         bukkitCloudAPI = new BukkitCloudAPI(scheduler, cloudAPI, deviceDB, config);
         eventManager.registerListener(bukkitCloudAPI);
 
@@ -63,9 +70,15 @@ public class LittleBitsBukkit extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        bukkitCloudAPI.shutdown();
-        deviceDB.save();
-        blockDB.save();
+        if (bukkitCloudAPI != null) {
+            bukkitCloudAPI.shutdown();
+        }
+        if (deviceDB != null) {
+            deviceDB.save();
+        }
+        if (blockDB != null) {
+            blockDB.save();
+        }
         HandlerList.unregisterAll(this);
         for (Iterator<Recipe> it = getServer().recipeIterator(); it.hasNext(); ) {
             if (it.next() == LittlebitsBlock.RECIPE) {
@@ -73,6 +86,11 @@ public class LittleBitsBukkit extends JavaPlugin {
                 break;
             }
         }
+    }
+
+    @Override
+    public void reloadConfig() {
+        super.reloadConfig();
     }
 
     @Override
