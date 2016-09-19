@@ -56,7 +56,7 @@ Note: I/O from the devices in the real-world is from 0-100, where as the redston
 * Support registering devices (requires `admin` scope).
 * Support custom recipe for LittleBits device (move recipe to `config.yml`)
 * Support more detailed debugging (i.e. raw-cloud-api feedback).
-* -Support more languages (i18n) - esp. Danish-
+* ~~Support more languages (i18n) -  esp. Danish~~
 * More minified jar-file (we include too much of apache httpcomponents atm).
 
 ## License
