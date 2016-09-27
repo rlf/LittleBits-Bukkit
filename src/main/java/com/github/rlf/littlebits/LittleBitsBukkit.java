@@ -56,7 +56,7 @@ public class LittleBitsBukkit extends JavaPlugin {
         blockDB = new FileBlockDB(deviceDB, eventManager);
         blockUpdateManager = new BlockUpdateManager(scheduler);
         EventCallbacks callbacks = EventCallbacks.of(this);
-        eventManager.registerListener(new BlockEvents(blockDB, deviceDB, eventManager, blockUpdateManager));
+        eventManager.registerListener(new BlockEvents(blockDB, deviceDB, eventManager, blockUpdateManager, scheduler));
         LittleBitsCommand cmdExecutor = new LittleBitsCommand(this, deviceDB, blockDB);
         cmdExecutor.add(new AccountCommand(deviceDB, eventManager, callbacks));
         cmdExecutor.add(new BlockCommand(blockDB, deviceDB));

@@ -1,16 +1,15 @@
 package com.github.rlf.littlebits.block;
 
+import com.github.rlf.littlebits.async.Scheduler;
 import com.github.rlf.littlebits.event.DeviceAttached;
 import com.github.rlf.littlebits.event.DeviceInput;
 import com.github.rlf.littlebits.event.EventManager;
 import com.github.rlf.littlebits.model.BlockDB;
-import com.github.rlf.littlebits.model.BlockLocation;
 import com.github.rlf.littlebits.model.Device;
 import com.github.rlf.littlebits.model.DeviceDB;
 import com.github.rlf.littlebits.model.LittlebitsBlock;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -20,12 +19,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Redstone;
-import org.bukkit.material.RedstoneWire;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 import static dk.lockfuglsang.minecraft.po.I18nUtil.tr;
 
@@ -38,13 +33,16 @@ public class BlockEvents implements Listener {
     private final DeviceDB deviceDB;
     private final EventManager eventManager;
     private final BlockUpdateManager blockUpdateManager;
-    private final Map<BlockLocation, List<Integer>> outputQueue = new ConcurrentHashMap<>();
+    private Scheduler scheduler;
 
-    public BlockEvents(BlockDB blockDB, DeviceDB deviceDB, EventManager eventManager, BlockUpdateManager blockUpdateManager) {
+    public BlockEvents(BlockDB blockDB, DeviceDB deviceDB,
+                       EventManager eventManager,
+                       BlockUpdateManager blockUpdateManager, Scheduler scheduler) {
         this.blockDB = blockDB;
         this.deviceDB = deviceDB;
         this.eventManager = eventManager;
         this.blockUpdateManager = blockUpdateManager;
+        this.scheduler = scheduler;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -69,6 +67,7 @@ public class BlockEvents implements Listener {
             }
         }
     }
+
     @EventHandler
     public void onRedstonePlace(BlockPlaceEvent e) {
         if (e.isCancelled()
@@ -80,11 +79,7 @@ public class BlockEvents implements Listener {
             return;
         }
         Set<LittlebitsBlock> inputs = blockDB.getInputs(e.getBlock().getLocation());
-        for (LittlebitsBlock bits : inputs) {
-            int blockPower = e.getBlock().getBlockPower();
-            deviceDB.setOutput(bits.getDevice(), blockPower);
-        }
-        eventManager.fireEvent(new BlockRedstoneEvent(e.getBlock(), 1, 0));
+        updateOutputs(inputs, e.getBlockPlaced().getBlockPower());
     }
 
     @EventHandler
@@ -183,10 +178,19 @@ public class BlockEvents implements Listener {
             }
         }
         Set<LittlebitsBlock> inputs = blockDB.getInputs(e.getBlock().getLocation());
+        updateOutputs(inputs, e.getNewCurrent());
+    }
+
+    private void updateOutputs(final Set<LittlebitsBlock> inputs, int amplitude) {
         if (!inputs.isEmpty()) {
+            Set<Device> devices = new HashSet<>();
             for (LittlebitsBlock littlebitsBlock : inputs) {
-                int amplitude = littlebitsBlock.getInputPower();
                 Device device = littlebitsBlock.getDevice();
+                if (device != null) {
+                    devices.add(device);
+                }
+            }
+            for (Device device : devices) {
                 if (device != null && device.getOut() != amplitude) {
                     deviceDB.setOutput(device, amplitude);
                 }

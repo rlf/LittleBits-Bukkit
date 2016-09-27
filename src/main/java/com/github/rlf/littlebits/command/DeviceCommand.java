@@ -1,5 +1,6 @@
 package com.github.rlf.littlebits.command;
 
+import com.github.rlf.littlebits.device.DeviceTracker;
 import com.github.rlf.littlebits.event.DeviceAdded;
 import com.github.rlf.littlebits.event.DeviceRemoved;
 import com.github.rlf.littlebits.event.EventManager;
@@ -18,9 +19,10 @@ import java.util.Map;
 import static dk.lockfuglsang.minecraft.po.I18nUtil.tr;
 
 public class DeviceCommand extends CompositeCommand {
-
+    private final DeviceTracker deviceTracker;
     public DeviceCommand(final DeviceDB deviceDB, final EventManager eventManager) {
         super("device|dev", "littlebits.device", tr("manage devices"));
+        deviceTracker = new DeviceTracker(eventManager);
         add(new AbstractCommand("info|i", "littlebits.device.info", "device", tr("show device info")) {
             @Override
             public boolean execute(CommandSender commandSender, String s, Map<String, Object> map, String... args) {
@@ -149,6 +151,41 @@ public class DeviceCommand extends CompositeCommand {
                             }
                         }
                         commandSender.sendMessage(msg.trim().split("\n"));
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+        add(new AbstractCommand("track", "littlebits.device.track", "device", tr("track the device")) {
+            @Override
+            public boolean execute(CommandSender commandSender, String s, Map<String, Object> map, String... args) {
+                if (args.length >= 1) {
+                    Device device = deviceDB.getDevice(args[0]);
+                    if (device == null) {
+                        commandSender.sendMessage(tr("No device {0} was found", args[0]));
+                    } else {
+                        deviceTracker.track(device, commandSender);
+                        commandSender.sendMessage(tr("Tracking device {0}", device));
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+        add(new AbstractCommand("untrack", "littlebits.device.track", "device", tr("stop tracking the device")) {
+            @Override
+            public boolean execute(CommandSender commandSender, String s, Map<String, Object> map, String... args) {
+                if (args.length >= 1) {
+                    Device device = deviceDB.getDevice(args[0]);
+                    if (device == null) {
+                        commandSender.sendMessage(tr("No device {0} was found", args[0]));
+                    } else {
+                        if (deviceTracker.untrack(device, commandSender)) {
+                            commandSender.sendMessage(tr("Stopped tracking device {0}", device));
+                        } else {
+                            commandSender.sendMessage(tr("Tracking was not enabled for {0}", device));
+                        }
                     }
                     return true;
                 }

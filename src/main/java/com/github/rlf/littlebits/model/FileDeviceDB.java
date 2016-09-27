@@ -1,16 +1,6 @@
 package com.github.rlf.littlebits.model;
 
-import com.github.rlf.littlebits.event.AccountAdded;
-import com.github.rlf.littlebits.event.AccountRemoved;
-import com.github.rlf.littlebits.event.AccountUpdated;
-import com.github.rlf.littlebits.event.DeviceAdded;
-import com.github.rlf.littlebits.event.DeviceConnected;
-import com.github.rlf.littlebits.event.DeviceDisconnected;
-import com.github.rlf.littlebits.event.DeviceInput;
-import com.github.rlf.littlebits.event.DeviceOutput;
-import com.github.rlf.littlebits.event.DeviceRemoved;
-import com.github.rlf.littlebits.event.DeviceUpdated;
-import com.github.rlf.littlebits.event.EventManager;
+import com.github.rlf.littlebits.event.*;
 import dk.lockfuglsang.minecraft.file.FileUtil;
 import dk.lockfuglsang.minecraft.yml.YmlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -236,11 +226,13 @@ public class FileDeviceDB implements DeviceDB {
                 deviceLog.put(device, new ArrayList<LogEntry>());
             }
             List<LogEntry> log = deviceLog.get(device);
-            log.add(0, new LogEntry(message));
+            LogEntry entry = new LogEntry(message);
+            log.add(0, entry);
             Collections.sort(deviceLog.get(device));
             while (log.size() > MAX_LOG) {
                 log.remove(log.size()-1);
             }
+            eventManager.fireEvent(new DeviceLogEvent(device, entry));
         }
     }
 

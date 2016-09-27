@@ -33,7 +33,7 @@ public class LogEntry implements Comparable<LogEntry> {
     @Override
     public String toString() {
         long now = System.currentTimeMillis();
-        return tr("\u00a77 - \u00a79{1} \u00a77({0})", dk.lockfuglsang.minecraft.util.TimeUtil.millisAsShort(now-timestamp), tr(message));
+        return tr("\u00a77 - \u00a79{1} \u00a77({0})", dk.lockfuglsang.minecraft.util.TimeUtil.millisAsString(now-timestamp), tr(message));
     }
 
     /**

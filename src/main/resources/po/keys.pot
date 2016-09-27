@@ -213,6 +213,24 @@ msgstr ""
 msgid "§7 - no log-entries"
 msgstr ""
 
+msgid "track the device"
+msgstr ""
+
+#, java-format
+msgid "Tracking device {0}"
+msgstr ""
+
+msgid "stop tracking the device"
+msgstr ""
+
+#, java-format
+msgid "Stopped tracking device {0}"
+msgstr ""
+
+#, java-format
+msgid "Tracking was not enabled for {0}"
+msgstr ""
+
 msgid "changes the language of the plugin, and reloads"
 msgstr ""
 
@@ -253,6 +271,10 @@ msgid "saves the configs to file"
 msgstr ""
 
 msgid "Configuration saved"
+msgstr ""
+
+#, java-format
+msgid "§7{0} - §9{1}"
 msgstr ""
 
 msgid "connected"

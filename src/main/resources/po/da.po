@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LittleBits-Bukkit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-26 14:37+0200\n"
-"PO-Revision-Date: 2016-09-17 20:44+0200\n"
+"POT-Creation-Date: 2016-09-27 20:33+0200\n"
+"PO-Revision-Date: 2016-09-27 20:35+0200\n"
 "Last-Translator: R4zorax\n"
 "Language-Team: Danish <cudim@lockfuglsang.dk>\n"
 "Language: da\n"
@@ -56,11 +56,11 @@ msgstr ""
 
 #, java-format
 msgid "API HTTP read-error {0}"
-msgstr ""
+msgstr "API HTTP læse-fejl {0}"
 
 #, java-format
 msgid "API HTTP write-error {0}"
-msgstr ""
+msgstr "API HTTP skrive-fejl {0}"
 
 msgid "handle littlebit accounts"
 msgstr "håndter littlebit konti"
@@ -213,14 +213,32 @@ msgid "Device input must be between 0-100"
 msgstr "Enheds input skal være imellem 0-100"
 
 msgid "display device-log"
-msgstr ""
+msgstr "vis enheds-log"
 
 #, java-format
 msgid "Device log for {0}"
-msgstr ""
+msgstr "Enheds log for {0}"
 
 msgid "§7 - no log-entries"
-msgstr ""
+msgstr "§7 - ingen log-beskeder"
+
+msgid "track the device"
+msgstr "følg enheden"
+
+#, java-format
+msgid "Tracking device {0}"
+msgstr "Følger nu {0}"
+
+msgid "stop tracking the device"
+msgstr "stop med at fælge enheden"
+
+#, java-format
+msgid "Stopped tracking device {0}"
+msgstr "Stoppede med at følge {0}"
+
+#, java-format
+msgid "Tracking was not enabled for {0}"
+msgstr "Kunne ikke følge {0}"
 
 msgid "changes the language of the plugin, and reloads"
 msgstr "skift pluginnets sprog og genindlæs"
@@ -264,6 +282,10 @@ msgstr "gemmer konfigurationen til fil"
 msgid "Configuration saved"
 msgstr "Konfigurationen gemt"
 
+#, java-format
+msgid "§7{0} - §9{1}"
+msgstr "§7{0} - §9{1}"
+
 msgid "connected"
 msgstr "§aforbundet"
 
@@ -275,25 +297,25 @@ msgid "{0} ({1}:{2}, in={3}, out={4}, {5})"
 msgstr "{0} §7({1}:{2}, in={3}, out={4}, {5}§7)"
 
 msgid "DEV Removed"
-msgstr ""
+msgstr "ENH Fjernet"
 
 msgid "DEV Added"
-msgstr ""
+msgstr "ENH Tilføjet"
 
 #, java-format
 msgid "INP << {0} ({1}%)"
-msgstr ""
+msgstr "INP << {0} ({1}%)"
 
 #, java-format
 msgid "OUT >> {0}"
-msgstr ""
+msgstr "OUT >> {0}"
 
 msgid "DEV Updated"
-msgstr ""
+msgstr "ENH Opdateret"
 
 msgid "littleBits"
 msgstr "littleBits"
 
 #, java-format
 msgid "§7 - §9{1} §7({0})"
-msgstr ""
+msgstr "§7 - §9{1} §7({0})"
