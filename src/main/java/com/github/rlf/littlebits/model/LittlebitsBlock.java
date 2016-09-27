@@ -4,6 +4,7 @@ import dk.lockfuglsang.minecraft.util.ItemStackUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -71,9 +72,27 @@ public class LittlebitsBlock {
         return block.getLocation();
     }
 
+    public Block getBlock() {
+        return block;
+    }
+
+    public int getInputPower() {
+        BlockFace facing = getFacing(block);
+        return facing != null ? block.getBlockPower(facing.getOppositeFace()) : 0;
+    }
+
     @Override
     public String toString() {
         return BlockLocation.wrap(block.getLocation()).toString() + " -> " + (device != null ? device.getLabel() : tr("-none-"));
+    }
+
+    public static BlockFace getFacing(Block block) {
+        BlockState state = block.getState();
+        if (state != null && state.getData() instanceof Directional) {
+            Directional directional = (Directional) state.getData();
+            return directional.getFacing();
+        }
+        return null;
     }
 
     public static Location getInputLocation(Block block) {

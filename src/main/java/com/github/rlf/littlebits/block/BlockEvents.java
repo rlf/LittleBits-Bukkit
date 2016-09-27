@@ -1,10 +1,10 @@
 package com.github.rlf.littlebits.block;
 
 import com.github.rlf.littlebits.event.DeviceAttached;
-import com.github.rlf.littlebits.event.DeviceDetached;
 import com.github.rlf.littlebits.event.DeviceInput;
 import com.github.rlf.littlebits.event.EventManager;
 import com.github.rlf.littlebits.model.BlockDB;
+import com.github.rlf.littlebits.model.BlockLocation;
 import com.github.rlf.littlebits.model.Device;
 import com.github.rlf.littlebits.model.DeviceDB;
 import com.github.rlf.littlebits.model.LittlebitsBlock;
@@ -16,7 +16,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -24,23 +23,28 @@ import org.bukkit.material.Redstone;
 import org.bukkit.material.RedstoneWire;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static dk.lockfuglsang.minecraft.po.I18nUtil.tr;
 
 /**
- *
+ * Responsible for reading (and writing) to and from the actual minecraft blocks.
  */
 public class BlockEvents implements Listener {
 
     private final BlockDB blockDB;
     private final DeviceDB deviceDB;
     private final EventManager eventManager;
+    private final BlockUpdateManager blockUpdateManager;
+    private final Map<BlockLocation, List<Integer>> outputQueue = new ConcurrentHashMap<>();
 
-    public BlockEvents(BlockDB blockDB, DeviceDB deviceDB, EventManager eventManager) {
+    public BlockEvents(BlockDB blockDB, DeviceDB deviceDB, EventManager eventManager, BlockUpdateManager blockUpdateManager) {
         this.blockDB = blockDB;
         this.deviceDB = deviceDB;
         this.eventManager = eventManager;
+        this.blockUpdateManager = blockUpdateManager;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -92,6 +96,7 @@ public class BlockEvents implements Listener {
         if (littlebitsBlock != null) {
             if (e.getPlayer().hasPermission("littlebits.block.break")) {
                 blockDB.remove(littlebitsBlock);
+                blockUpdateManager.remove(e.getBlock());
             } else {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(tr("You are not allowed to break littleBits (littlebits.block.break)"));
@@ -163,15 +168,7 @@ public class BlockEvents implements Listener {
         int newCurrent = e.getDevice().getIn();
         for (LittlebitsBlock block : blocks) {
             Block outputBlock = block.getOutputBlock();
-            setNewCurrent(outputBlock, newCurrent);
-        }
-    }
-
-    private void setNewCurrent(Block outputBlock, int newCurrent) {
-        if (outputBlock.getState() instanceof BlockState
-                && outputBlock.getState().getData() instanceof RedstoneWire) {
-            // TODO: 16/09/2016 - R4zorax: Handle other redstone blocks as well?
-            outputBlock.setData((byte) newCurrent);
+            blockUpdateManager.setCurrent(outputBlock, newCurrent);
         }
     }
 
@@ -182,14 +179,13 @@ public class BlockEvents implements Listener {
             LittlebitsBlock littlebitsBlock = outputs.iterator().next();
             if (littlebitsBlock != null && littlebitsBlock.getDevice() != null) {
                 int newCurrent = littlebitsBlock.getDevice().getIn();
-                setNewCurrent(e.getBlock(), newCurrent);
                 e.setNewCurrent(newCurrent);
             }
         }
         Set<LittlebitsBlock> inputs = blockDB.getInputs(e.getBlock().getLocation());
         if (!inputs.isEmpty()) {
-            int amplitude = e.getNewCurrent();
             for (LittlebitsBlock littlebitsBlock : inputs) {
+                int amplitude = littlebitsBlock.getInputPower();
                 Device device = littlebitsBlock.getDevice();
                 if (device != null && device.getOut() != amplitude) {
                     deviceDB.setOutput(device, amplitude);

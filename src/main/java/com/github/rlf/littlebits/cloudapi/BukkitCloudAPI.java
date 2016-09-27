@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import static dk.lockfuglsang.minecraft.po.I18nUtil.tr;
+
 /**
  * Bridge between the Bukkit event model and the CloudAPI
  */
@@ -187,6 +189,9 @@ public class BukkitCloudAPI implements Listener {
             } catch (Exception e) {
                 deviceDB.removeDevice(device);
             }
+            if (status != 200) {
+                deviceDB.addLog(device, tr("API HTTP read-error {0}", status));
+            }
             if (!isCancelled()) {
                 scheduler.async(this, getWaitTime(status));
             }
@@ -219,6 +224,9 @@ public class BukkitCloudAPI implements Listener {
         @Override
         public void run() {
             int status = cloudAPI.writeOutput(device, device.getOut() * 100 / 15);
+            if (status != 200) {
+                deviceDB.addLog(device, tr("API HTTP write-error {0}", status));
+            }
             queue(getWaitTime(status));
         }
 

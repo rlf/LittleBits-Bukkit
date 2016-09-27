@@ -4,12 +4,12 @@ import com.github.rlf.littlebits.model.Account;
 import org.bukkit.event.HandlerList;
 
 /**
- * An event fired when an account is removed.
+ * An event fired when the device list on an account has been updated.
  */
-public class AccountRemoved extends AbstractAccountEvent {
+public class AccountUpdated extends AbstractAccountEvent {
     private static final HandlerList handlers = new HandlerList();
 
-    public AccountRemoved(Account account) {
+    public AccountUpdated(Account account) {
         super(account);
     }
 

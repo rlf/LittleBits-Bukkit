@@ -45,6 +45,14 @@ msgstr ""
 msgid "You are not allowed to change littleBits (littlebits.block.assign)"
 msgstr ""
 
+#, java-format
+msgid "API HTTP read-error {0}"
+msgstr ""
+
+#, java-format
+msgid "API HTTP write-error {0}"
+msgstr ""
+
 msgid "handle littlebit accounts"
 msgstr ""
 
@@ -67,17 +75,6 @@ msgid "No account with id {0} was found"
 msgstr ""
 
 msgid "list all current accounts"
-msgstr ""
-
-msgid "All accounts:"
-msgstr ""
-
-#, java-format
-msgid "  Account: {0}\n"
-msgstr ""
-
-#, java-format
-msgid "    - {0}\n"
 msgstr ""
 
 msgid "updates the account info"
@@ -103,6 +100,17 @@ msgstr ""
 
 #, java-format
 msgid "Account {0} has token {1}"
+msgstr ""
+
+msgid "All accounts:"
+msgstr ""
+
+#, java-format
+msgid "  Account: {0}\n"
+msgstr ""
+
+#, java-format
+msgid "    - {0}\n"
 msgstr ""
 
 msgid "manages blocks"
@@ -195,6 +203,16 @@ msgstr ""
 msgid "Device input must be between 0-100"
 msgstr ""
 
+msgid "display device-log"
+msgstr ""
+
+#, java-format
+msgid "Device log for {0}"
+msgstr ""
+
+msgid "§7 - no log-entries"
+msgstr ""
+
 msgid "changes the language of the plugin, and reloads"
 msgstr ""
 
@@ -247,5 +265,26 @@ msgstr ""
 msgid "{0} ({1}:{2}, in={3}, out={4}, {5})"
 msgstr ""
 
+msgid "DEV Removed"
+msgstr ""
+
+msgid "DEV Added"
+msgstr ""
+
+#, java-format
+msgid "INP << {0} ({1}%)"
+msgstr ""
+
+#, java-format
+msgid "OUT >> {0}"
+msgstr ""
+
+msgid "DEV Updated"
+msgstr ""
+
 msgid "littleBits"
+msgstr ""
+
+#, java-format
+msgid "§7 - §9{1} §7({0})"
 msgstr ""

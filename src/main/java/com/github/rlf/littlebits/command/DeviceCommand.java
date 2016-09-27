@@ -5,6 +5,7 @@ import com.github.rlf.littlebits.event.DeviceRemoved;
 import com.github.rlf.littlebits.event.EventManager;
 import com.github.rlf.littlebits.model.Device;
 import com.github.rlf.littlebits.model.DeviceDB;
+import com.github.rlf.littlebits.model.LogEntry;
 import dk.lockfuglsang.minecraft.command.AbstractCommand;
 import dk.lockfuglsang.minecraft.command.CompositeCommand;
 import dk.lockfuglsang.minecraft.command.completion.AbstractTabCompleter;
@@ -129,6 +130,31 @@ public class DeviceCommand extends CompositeCommand {
             }
         });
         */
+        add(new AbstractCommand("log", "littlebits.device.log", "device ?search", tr("display device-log")) {
+            @Override
+            public boolean execute(CommandSender commandSender, String s, Map<String, Object> map, String... args) {
+                if (args.length >= 1) {
+                    String search = args.length > 1 ? join(args).substring(args[0].length()+1) : null;
+                    Device device = deviceDB.getDevice(args[0]);
+                    if (device == null) {
+                        commandSender.sendMessage(tr("No device {0} was found", args[0]));
+                    } else {
+                        String msg = tr("Device log for {0}", device) + "\n";
+                        List<LogEntry> log = deviceDB.getLog(device, search, 0, 10);
+                        if (log.isEmpty()) {
+                            msg += tr("\u00a77 - no log-entries") + "\n";
+                        } else {
+                            for (LogEntry entry : log) {
+                                msg += entry.toString() + "\n";
+                            }
+                        }
+                        commandSender.sendMessage(msg.trim().split("\n"));
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 }

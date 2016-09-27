@@ -1,5 +1,7 @@
 package com.github.rlf.littlebits.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static dk.lockfuglsang.minecraft.po.I18nUtil.tr;

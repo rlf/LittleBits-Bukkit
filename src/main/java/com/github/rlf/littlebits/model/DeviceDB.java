@@ -99,4 +99,19 @@ public interface DeviceDB extends AbstractDB {
      */
     boolean removeDevice(Device device);
 
+    /**
+     * Adds a device-log entry.
+     * @param device  The device to log a message for
+     * @param message The message to log.
+     */
+    void addLog(Device device, String message);
+
+    /**
+     * Returns a list of log-entries for what happened to the device.
+     * @param device The device to see a log for
+     * @param search A search term to filter for in the log
+     *@param offset An offset in the log.
+     * @param length The (max) number of log-entries to return.   @return A (possibly empty) list of log-entries.
+     */
+    List<LogEntry> getLog(Device device, String search, int offset, int length);
 }

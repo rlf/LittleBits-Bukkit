@@ -96,6 +96,10 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>inventive-repo</id>
+            <url>https://repo.inventivetalent.org/content/repositories/releases</url>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
@@ -245,6 +249,11 @@
         <dependency>
             <groupId>dk.lockfuglsang.minecraft</groupId>
             <artifactId>bukkit-utils</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>org.inventivetalent</groupId>
+            <artifactId>eventcallbacks</artifactId>
             <version>LATEST</version>
         </dependency>
         <dependency>

@@ -4,7 +4,7 @@ import com.github.rlf.littlebits.model.Account;
 import org.bukkit.event.HandlerList;
 
 /**
- * An event fired when one of the registered devices receives input (from redstone).
+ * An event fired when an account is added.
  */
 public class AccountAdded extends AbstractAccountEvent {
     private static final HandlerList handlers = new HandlerList();

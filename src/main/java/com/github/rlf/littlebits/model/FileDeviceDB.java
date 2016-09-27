@@ -2,6 +2,7 @@ package com.github.rlf.littlebits.model;
 
 import com.github.rlf.littlebits.event.AccountAdded;
 import com.github.rlf.littlebits.event.AccountRemoved;
+import com.github.rlf.littlebits.event.AccountUpdated;
 import com.github.rlf.littlebits.event.DeviceAdded;
 import com.github.rlf.littlebits.event.DeviceConnected;
 import com.github.rlf.littlebits.event.DeviceDisconnected;
@@ -17,17 +18,25 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
+
+import static dk.lockfuglsang.minecraft.po.I18nUtil.marktr;
+import static dk.lockfuglsang.minecraft.po.I18nUtil.tr;
 
 /**
  * File based device database
  */
 public class FileDeviceDB implements DeviceDB {
     private static final Logger log = Logger.getLogger(FileDeviceDB.class.getName());
+    private static final int MAX_LOG = 500;
 
     private final List<Account> accounts = new CopyOnWriteArrayList<>();
+    private final Map<Device, List<LogEntry>> deviceLog = new ConcurrentHashMap<>();
 
     private YmlConfiguration config;
     private EventManager eventManager;
@@ -76,6 +85,7 @@ public class FileDeviceDB implements DeviceDB {
         removedDevices.removeAll(newDevices); // Those that should be deleted
         for (Device device : removedDevices) {
             account.getDevices().remove(device);
+            addLog(device, marktr("DEV Removed"));
             eventManager.fireEvent(new DeviceRemoved(device));
         }
         for (Device device : updatedDevices) {
@@ -85,8 +95,10 @@ public class FileDeviceDB implements DeviceDB {
         newDevices.removeAll(updatedDevices);
         for (Device device : newDevices) {
             account.getDevices().add(device);
+            addLog(device, marktr("DEV Added"));
             eventManager.fireEvent(new DeviceAdded(device));
         }
+        eventManager.fireEvent(new AccountUpdated(account));
         return account;
     }
 
@@ -129,10 +141,11 @@ public class FileDeviceDB implements DeviceDB {
             return;
         }
         setConnected(device, true);
-        int amplitude = (percentage*15)/100;
+        int amplitude = (percentage * 15) / 100;
         int oldIn = device.getIn();
         if (oldIn != amplitude) {
             device.setIn(amplitude);
+            addLog(device, tr("INP << {0} ({1}%)", amplitude, percentage));
             eventManager.fireEvent(new DeviceInput(device, oldIn));
         }
     }
@@ -145,6 +158,7 @@ public class FileDeviceDB implements DeviceDB {
         int oldOut = device.getOut();
         if (oldOut != amplitude) {
             device.setOut(amplitude);
+            addLog(device, tr("OUT >> {0}", amplitude));
             eventManager.fireEvent(new DeviceOutput(device, oldOut));
         }
     }
@@ -153,6 +167,7 @@ public class FileDeviceDB implements DeviceDB {
     public void setLabel(Device device, String label) {
         if (device != null && !label.equals(device.getLabel())) {
             device.setLabel(label);
+            addLog(device, marktr("DEV Updated"));
             eventManager.fireEvent(new DeviceUpdated(device));
         }
     }
@@ -212,6 +227,41 @@ public class FileDeviceDB implements DeviceDB {
         } finally {
             eventManager.fireEvent(new DeviceRemoved(device));
         }
+    }
+
+    @Override
+    public void addLog(Device device, String message) {
+        synchronized (deviceLog) {
+            if (!deviceLog.containsKey(device)) {
+                deviceLog.put(device, new ArrayList<LogEntry>());
+            }
+            List<LogEntry> log = deviceLog.get(device);
+            log.add(0, new LogEntry(message));
+            Collections.sort(deviceLog.get(device));
+            while (log.size() > MAX_LOG) {
+                log.remove(log.size()-1);
+            }
+        }
+    }
+
+    @Override
+    public List<LogEntry> getLog(Device device, String search, int offset, int length) {
+        List<LogEntry> log = deviceLog.get(device);
+        if (log == null || log.isEmpty() || log.size() < offset) {
+            return Collections.emptyList();
+        }
+        ArrayList<LogEntry> copy = new ArrayList<>(log);
+        if (search != null && !search.isEmpty()) {
+            for (Iterator<LogEntry> it = copy.iterator(); it.hasNext();) {
+                if (!it.next().toString().contains(search)) {
+                    it.remove();
+                }
+            }
+        }
+        if (!copy.isEmpty() && offset >= 0 && offset < copy.size()) {
+            return new ArrayList<>(copy.subList(offset, Math.min(log.size(), offset + length)));
+        }
+        return Collections.emptyList();
     }
 
     @Override

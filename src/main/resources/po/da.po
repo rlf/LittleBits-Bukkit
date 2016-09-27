@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LittleBits-Bukkit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-17 13:56+0200\n"
+"POT-Creation-Date: 2016-09-26 14:37+0200\n"
 "PO-Revision-Date: 2016-09-17 20:44+0200\n"
 "Last-Translator: R4zorax\n"
 "Language-Team: Danish <cudim@lockfuglsang.dk>\n"
@@ -54,6 +54,14 @@ msgid "You are not allowed to change littleBits (littlebits.block.assign)"
 msgstr ""
 "Du har ikke tilladelse til at ændre littleBits (littlebits.block.assign)"
 
+#, java-format
+msgid "API HTTP read-error {0}"
+msgstr ""
+
+#, java-format
+msgid "API HTTP write-error {0}"
+msgstr ""
+
 msgid "handle littlebit accounts"
 msgstr "håndter littlebit konti"
 
@@ -77,17 +85,6 @@ msgstr "Kunne ikke finde en konto med id {0}"
 
 msgid "list all current accounts"
 msgstr "se alle nuværende konti"
-
-msgid "All accounts:"
-msgstr "Konti:"
-
-#, java-format
-msgid "  Account: {0}\n"
-msgstr "  Konto: {0}\n"
-
-#, java-format
-msgid "    - {0}\n"
-msgstr "    - {0}\n"
 
 msgid "updates the account info"
 msgstr "opdaterer konto information"
@@ -113,6 +110,17 @@ msgstr "Viser kontoens token"
 #, java-format
 msgid "Account {0} has token {1}"
 msgstr "Konto {0} har token {1}"
+
+msgid "All accounts:"
+msgstr "Konti:"
+
+#, java-format
+msgid "  Account: {0}\n"
+msgstr "  Konto: {0}\n"
+
+#, java-format
+msgid "    - {0}\n"
+msgstr "    - {0}\n"
 
 msgid "manages blocks"
 msgstr "håndter blokke"
@@ -204,6 +212,16 @@ msgstr "Enhed {0} input sat til {1}"
 msgid "Device input must be between 0-100"
 msgstr "Enheds input skal være imellem 0-100"
 
+msgid "display device-log"
+msgstr ""
+
+#, java-format
+msgid "Device log for {0}"
+msgstr ""
+
+msgid "§7 - no log-entries"
+msgstr ""
+
 msgid "changes the language of the plugin, and reloads"
 msgstr "skift pluginnets sprog og genindlæs"
 
@@ -256,5 +274,26 @@ msgstr "§cafbrudt"
 msgid "{0} ({1}:{2}, in={3}, out={4}, {5})"
 msgstr "{0} §7({1}:{2}, in={3}, out={4}, {5}§7)"
 
+msgid "DEV Removed"
+msgstr ""
+
+msgid "DEV Added"
+msgstr ""
+
+#, java-format
+msgid "INP << {0} ({1}%)"
+msgstr ""
+
+#, java-format
+msgid "OUT >> {0}"
+msgstr ""
+
+msgid "DEV Updated"
+msgstr ""
+
 msgid "littleBits"
 msgstr "littleBits"
+
+#, java-format
+msgid "§7 - §9{1} §7({0})"
+msgstr ""

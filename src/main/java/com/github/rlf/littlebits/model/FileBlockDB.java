@@ -3,6 +3,7 @@ package com.github.rlf.littlebits.model;
 import com.github.rlf.littlebits.event.DeviceAdded;
 import com.github.rlf.littlebits.event.DeviceAttached;
 import com.github.rlf.littlebits.event.DeviceDetached;
+import com.github.rlf.littlebits.event.DeviceInput;
 import com.github.rlf.littlebits.event.DeviceUpdated;
 import com.github.rlf.littlebits.event.EventManager;
 import dk.lockfuglsang.minecraft.file.FileUtil;
@@ -127,7 +128,14 @@ public class FileBlockDB implements BlockDB, Listener {
     @Override
     public Set<LittlebitsBlock> getInputs(Location location) {
         BlockLocation loc = BlockLocation.wrap(location);
-        return inputs.containsKey(loc) ? Collections.unmodifiableSet(inputs.get(loc)) : Collections.<LittlebitsBlock>emptySet();
+        Set<LittlebitsBlock> input = new HashSet<>();
+        if (inputs.containsKey(loc)) {
+            input.addAll(inputs.get(loc));
+        }
+        if (blocks.containsKey(loc)) {
+            input.add(blocks.get(loc));
+        }
+        return input;
     }
 
     @Override

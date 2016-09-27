@@ -2,14 +2,16 @@ package com.github.rlf.littlebits.command;
 
 import com.github.rlf.littlebits.event.AccountAdded;
 import com.github.rlf.littlebits.event.AccountRemoved;
+import com.github.rlf.littlebits.event.AccountUpdated;
 import com.github.rlf.littlebits.event.EventManager;
 import com.github.rlf.littlebits.model.Account;
 import com.github.rlf.littlebits.model.Device;
 import com.github.rlf.littlebits.model.DeviceDB;
 import dk.lockfuglsang.minecraft.command.AbstractCommand;
 import dk.lockfuglsang.minecraft.command.CompositeCommand;
-import dk.lockfuglsang.minecraft.command.completion.AbstractTabCompleter;
 import org.bukkit.command.CommandSender;
+import org.inventivetalent.eventcallbacks.EventCallback;
+import org.inventivetalent.eventcallbacks.EventCallbacks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +24,30 @@ import static dk.lockfuglsang.minecraft.po.I18nUtil.tr;
  */
 public class AccountCommand extends CompositeCommand {
 
-    public AccountCommand(final DeviceDB deviceDB, final EventManager eventManager) {
+    private final DeviceDB deviceDB;
+
+    public AccountCommand(final DeviceDB deviceDB,
+                          final EventManager eventManager,
+                          final EventCallbacks callbacks)
+    {
         super("account|acc", "littlebits.account", tr("handle littlebit accounts"));
+        this.deviceDB = deviceDB;
         add(new AbstractCommand("add", "littlebits.account.add", "account", tr("add an account")) {
             @Override
-            public boolean execute(CommandSender commandSender, String alias, Map<String, Object> map, String... args) {
+            public boolean execute(final CommandSender commandSender, String alias, Map<String, Object> map, String... args) {
                 if (args.length == 1) {
-                    Account account = deviceDB.addAccount(args[0]);
+                    final Account account = deviceDB.addAccount(args[0]);
                     commandSender.sendMessage(tr("Added account with token {0}", account.getToken()));
+                    callbacks.listenFor(AccountUpdated.class, new EventCallback<AccountUpdated>() {
+                        @Override
+                        public boolean call(AccountUpdated e) {
+                            boolean sameAccount = e.getAccount().equals(account);
+                            if (sameAccount) {
+                                showAccountList(commandSender);
+                            }
+                            return sameAccount;
+                        }
+                    });
                     return true;
                 }
                 return false;
@@ -52,14 +70,7 @@ public class AccountCommand extends CompositeCommand {
         add(new AbstractCommand("list", "littlebits.account.list", tr("list all current accounts")) {
             @Override
             public boolean execute(CommandSender commandSender, String s, Map<String, Object> map, String... strings) {
-                String msg = tr("All accounts:") + "\n";
-                for (Account account : deviceDB.getAccounts()) {
-                    msg += tr("  Account: {0}\n", account.getDisplayName());
-                    for (Device device : account.getDevices()) {
-                        msg += tr("    - {0}\n", device.toString());
-                    }
-                }
-                commandSender.sendMessage(msg.split("\n"));
+                showAccountList(commandSender);
                 return true;
             }
         });
@@ -122,6 +133,17 @@ public class AccountCommand extends CompositeCommand {
                 return false;
             }
         });
+    }
+
+    private void showAccountList(CommandSender commandSender) {
+        String msg = tr("All accounts:") + "\n";
+        for (Account account : deviceDB.getAccounts()) {
+            msg += tr("  Account: {0}\n", account.getDisplayName());
+            for (Device device : account.getDevices()) {
+                msg += tr("    - {0}\n", device.toString());
+            }
+        }
+        commandSender.sendMessage(msg.split("\n"));
     }
 
 }

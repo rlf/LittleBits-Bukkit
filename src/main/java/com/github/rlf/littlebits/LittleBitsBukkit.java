@@ -3,14 +3,13 @@ package com.github.rlf.littlebits;
 import com.github.rlf.littlebits.async.Scheduler;
 import com.github.rlf.littlebits.async.bukkit.SchedulerBukkit;
 import com.github.rlf.littlebits.block.BlockEvents;
+import com.github.rlf.littlebits.block.BlockUpdateManager;
 import com.github.rlf.littlebits.cloudapi.BukkitCloudAPI;
 import com.github.rlf.littlebits.cloudapi.HttpCloudAPI;
 import com.github.rlf.littlebits.command.AccountCommand;
 import com.github.rlf.littlebits.command.LittleBitsCommand;
 import com.github.rlf.littlebits.command.BlockCommand;
 import com.github.rlf.littlebits.command.DeviceCommand;
-import com.github.rlf.littlebits.command.ReloadCommand;
-import com.github.rlf.littlebits.command.SaveCommand;
 import com.github.rlf.littlebits.event.EventManager;
 import com.github.rlf.littlebits.event.EventManagerImpl;
 import com.github.rlf.littlebits.model.*;
@@ -18,10 +17,10 @@ import dk.lockfuglsang.minecraft.file.FileUtil;
 import dk.lockfuglsang.minecraft.po.I18nUtil;
 import dk.lockfuglsang.minecraft.yml.YmlConfiguration;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.inventivetalent.eventcallbacks.EventCallbacks;
 
 import java.util.Iterator;
 import java.util.Locale;
@@ -35,6 +34,7 @@ public class LittleBitsBukkit extends JavaPlugin {
     private DeviceDB deviceDB;
     private BlockDB blockDB;
     private BukkitCloudAPI bukkitCloudAPI;
+    private BlockUpdateManager blockUpdateManager;
 
     @Override
     public void onEnable() {
@@ -54,9 +54,11 @@ public class LittleBitsBukkit extends JavaPlugin {
         eventManager.registerListener(bukkitCloudAPI);
 
         blockDB = new FileBlockDB(deviceDB, eventManager);
-        eventManager.registerListener(new BlockEvents(blockDB, deviceDB, eventManager));
+        blockUpdateManager = new BlockUpdateManager(scheduler);
+        EventCallbacks callbacks = EventCallbacks.of(this);
+        eventManager.registerListener(new BlockEvents(blockDB, deviceDB, eventManager, blockUpdateManager));
         LittleBitsCommand cmdExecutor = new LittleBitsCommand(this, deviceDB, blockDB);
-        cmdExecutor.add(new AccountCommand(deviceDB, eventManager));
+        cmdExecutor.add(new AccountCommand(deviceDB, eventManager, callbacks));
         cmdExecutor.add(new BlockCommand(blockDB, deviceDB));
         cmdExecutor.add(new DeviceCommand(deviceDB, eventManager));
         PluginCommand pluginCmd = getCommand("littlebits");
@@ -70,6 +72,9 @@ public class LittleBitsBukkit extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (blockUpdateManager != null) {
+            blockUpdateManager.shutdown();
+        }
         if (bukkitCloudAPI != null) {
             bukkitCloudAPI.shutdown();
         }
